@@ -1,440 +1,228 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Github, Download, Figma } from "lucide-react";
+import Image from "next/image";
+import {
+  ExternalLink,
+  Github,
+  Download,
+  Figma,
+  Layers,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { projects, ProjectItem } from "../../lib/portfolio-data";
 
-type ProjectCategory = "All" | "ML/AI" | "Web" | "Mobile" | "Desktop";
-
-interface Project {
-  title: string;
-  emoji: string;
-  description: string;
-  tech: string[];
-  category: ProjectCategory[];
-  links: {
-    live?: string;
-    api?: string;
-    github?: string;
-    githubFrontend?: string;
-    githubBackend?: string;
-    download?: string;
-    figma?: string;
-  };
-  image: string;
-}
+type FilterCategory = "All" | "Web" | "Mobile" | "ML/AI" | "Systems";
 
 export function Projects() {
-  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("All");
+  const [activeCategory, setActiveCategory] = useState<FilterCategory>("All");
   const [showAll, setShowAll] = useState(false);
 
-  const projects: Project[] = [
-    {
-      title: "MyCUETBus",
-      emoji: "🚌",
-      description:
-        "Real-time university bus tracking with GPS, live map, background location sharing",
-      tech: ["React Native", "Expo", "Mapbox GL", "Firebase", "NativeWind"],
-      category: ["Mobile"],
-      links: {
-        download: "https://mycuetbus.web.app/",
-        figma:
-          "https://www.figma.com/design/vQ2w1PHp8utaXXKp5U1dHc/MyCUETBus-Design?node-id=0-1&t=6BbIdiQS8s5zxyuR-1",
-        github: "https://github.com/RifatHossaiN47/MyCUETBus",
-      },
-      image: "/projects/mycuetbus.png",
-    },
-    {
-      title: "CUET FoodExpress",
-      emoji: "🍕",
-      description:
-        "Modern food ordering platform with Firebase auth, Stripe payments, admin dashboard",
-      tech: [
-        "React",
-        "Node.js",
-        "MongoDB",
+  const categories: FilterCategory[] = ["All", "Web", "Mobile", "ML/AI", "Systems"];
 
-        "Firebase",
-        "Express.js",
-        "TailwindCSS",
-        "JWT",
-        "Stripe",
-        "Mailgun",
-      ],
-      category: ["Web"],
-      links: {
-        live: "https://cuet-foodexpress-w3.web.app",
-        api: "https://cuet-foodexpress-server.vercel.app",
-        githubFrontend:
-          "https://github.com/RifatHossaiN47/cuet-foodexpress-frontend",
-        githubBackend:
-          "https://github.com/RifatHossaiN47/cuet-foodexpress-backend",
-      },
-      image: "/projects/cuetfoodexpress.png",
-    },
-    {
-      title: "Movie Recommendation System",
-      emoji: "🎬",
-      description:
-        "Content-based recommendation using cosine similarity, 5000+ movies",
-      tech: ["Python", "Streamlit", "Scikit-learn", "NLTK", "Pandas", "NumPy"],
-      category: ["ML/AI"],
-      links: {
-        live: "https://movie-recommendation-rh47.streamlit.app/",
-        github:
-          "https://github.com/RifatHossaiN47/ML-Movie-Recommendation-System",
-      },
-      image: "/projects/movierecommend.jpg",
-    },
-    {
-      title: "Email/SMS Spam Classifier",
-      emoji: "📧",
-      description:
-        "Spam detection using MultinomialNB with TF-IDF vectorization",
-      tech: ["Python", "Streamlit", "Scikit-learn", "NLTK", "Cython", "C++"],
-      category: ["ML/AI"],
-      links: {
-        live: "https://email-spam-classifier-ml-model.onrender.com/",
-        github:
-          "https://github.com/RifatHossaiN47/Email-Spam-Classifier-ML-Model",
-      },
-      image: "/projects/emailspam.jpg",
-    },
+  const filteredProjects = projects.filter((p) => {
+    if (activeCategory === "All") return true;
+    return p.category.includes(activeCategory);
+  });
 
-    {
-      title: "KREMS Technologies",
-      emoji: "🏢",
-      description:
-        "Modern company website for AI & software engineering services",
-      tech: ["Next.js 16", "TypeScript", "Tailwind CSS", "EmailJS"],
-      category: ["Web"],
-      links: {
-        live: "https://krems.vercel.app/",
-        github: "https://github.com/RifatHossaiN47/krems",
-      },
-      image: "/projects/krems.png",
-    },
-
-    {
-      title: "Stadium Ticket Management",
-      emoji: "🎫️",
-      description: "Ticket booking system with authentication",
-      tech: [
-        "Java Spring Boot",
-        "HTML",
-        "CSS",
-        "MySQL",
-        "JavaScript",
-        "Bootstrap",
-      ],
-      category: ["Web"],
-      links: {
-        live: "https://stadium-ticket-management-system-production.up.railway.app/",
-        github:
-          "https://github.com/RifatHossaiN47/Stadium-Ticket-Management-System",
-      },
-      image: "/projects/tricket.png",
-    },
-
-    {
-      title: "BMI Calculator",
-      emoji: "🏋️",
-      description: "Health app with BMI calculation & health classification",
-      tech: ["Java", "Android SDK", "Material Design"],
-      category: ["Mobile"],
-      links: {
-        download:
-          "https://github.com/RifatHossaiN47/BMI-Calculator-App/releases/download/v1.0.0/BMICalculator.apk",
-        github: "https://github.com/RifatHossaiN47/BMI-Calculator-App",
-      },
-      image: "/projects/bmi.png",
-    },
-    {
-      title: "Tic-Tac-Toe Game",
-      emoji: "🎮",
-      description: "Classic game with animations & player customization",
-      tech: ["Java", "Android Studio", "Material Design"],
-      category: ["Mobile"],
-      links: {
-        download:
-          "https://github.com/RifatHossaiN47/Tic-Tac-Toe-Game/releases/download/v1.0.0/Tic-Tac-Toe.apk",
-        github: "https://github.com/RifatHossaiN47/Tic-Tac-Toe-Game",
-      },
-      image: "/projects/tictac.png",
-    },
-    {
-      title: "MyCUETBus Landing Page",
-      emoji: "🌐",
-      description: "Download page for MyCUETBus app",
-      tech: ["HTML", "Firebase Hosting"],
-      category: ["Web", "Mobile"],
-      links: {
-        live: "https://mycuetbus.web.app/",
-        github: "https://github.com/RifatHossaiN47/MyCUETBus_Hosting-Firebase",
-      },
-      image: "/projects/kraken.png",
-    },
-    {
-      title: "CSE Department Database System",
-      emoji: "🎓",
-      description: "Student-Teacher Database Management for CUET",
-      tech: ["C++", "OOP", "File I/O"],
-      category: ["Desktop"],
-      links: {
-        download:
-          "https://github.com/RifatHossaiN47/Cpp_OOP_Projects/releases/download/v1.0.0/CSEDatabaseCUET.exe",
-        github: "https://github.com/RifatHossaiN47/Cpp_OOP_Projects",
-      },
-      image: "/projects/datacse.png",
-    },
-    {
-      title: "Quiz Web Application",
-      emoji: "📝",
-      description: "Interactive quiz platform with Spring Boot backend",
-      tech: ["Java Spring Boot", "HTML", "CSS", "MySQL"],
-      category: ["Web"],
-      links: {
-        live: "https://java-spring-boot-quiz-web-app-production.up.railway.app/",
-        github:
-          "https://github.com/RifatHossaiN47/Java-Spring-boot-Quiz-web-app",
-      },
-      image: "/projects/quiz.jpg",
-    },
-
-    {
-      title: "Bash Library Management System",
-      emoji: "📚",
-      description: "Command-line library system with admin/user roles",
-      tech: ["Bash", "Shell Scripting"],
-      category: ["Desktop"],
-      links: {
-        github:
-          "https://github.com/RifatHossaiN47/bash-library-management-system",
-      },
-      image: "/projects/library.png",
-    },
-    {
-      title: "OS Scheduling Algorithms",
-      emoji: "⚙️",
-      description:
-        "CPU Scheduling (FCFS, SJF, Priority, Round Robin, HRRN) & Banker's Algorithm",
-      tech: ["C++"],
-      category: ["Desktop"],
-      links: {
-        download:
-          "https://github.com/RifatHossaiN47/os-scheduling-algorithms/releases/download/v1.0.0/cpu_scheduling_simulator.exe",
-        github: "https://github.com/RifatHossaiN47/os-scheduling-algorithms",
-      },
-      image:
-        "https://images.unsplash.com/photo-1665470909939-959569b20021?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3ZWIlMjBhcHBsaWNhdGlvbiUyMGRhc2hib2FyZHxlbnwxfHx8fDE3NjU2MzE0NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-      title: "Previous Portfolio",
-      emoji: "📄",
-      description: "HTML/CSS/JS portfolio website",
-      tech: ["HTML", "CSS", "JavaScript"],
-      category: ["Web"],
-      links: {
-        live: "https://rifathossain47.github.io/Rifat_Portfolio/",
-        github: "https://github.com/RifatHossaiN47/Rifat_Portfolio",
-      },
-      image: "/projects/old.png",
-    },
-  ];
-
-  const filters: ProjectCategory[] = [
-    "All",
-    "ML/AI",
-    "Web",
-    "Mobile",
-    "Desktop",
-  ];
-
-  const filteredProjects =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((p) => p.category.includes(activeFilter));
-
-  // Show only 6 projects initially
-  const displayedProjects = showAll
-    ? filteredProjects
-    : filteredProjects.slice(0, 6);
-  const hasMoreProjects = filteredProjects.length > 6;
+  // Display top 6 initially (or all if toggled)
+  const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 6);
+  const hasMore = filteredProjects.length > 6;
 
   return (
-    <section id="projects" className="py-24 md:py-32 px-6 md:px-12">
-      <div className="max-w-[1440px] mx-auto">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl mb-12 text-center md:text-left">
-          Featured Projects
-        </h2>
+    <section id="projects" className="py-20 px-5 sm:px-8 border-t border-[#E6E0D6] dark:border-[#2B2824]">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono tracking-wider text-[#D96B27] bg-[#D96B27]/10 border border-[#D96B27]/30 mb-2 uppercase">
+              <Layers className="w-3.5 h-3.5 text-[#D96B27]" />
+              <span>SOFTWARE & AI ENGINEERING</span>
+            </div>
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl tracking-tight text-neutral-900 dark:text-[#F5EFE6] uppercase">
+              02 // <span className="text-[#D96B27]">FEATURED PROJECTS</span>
+            </h2>
+            <p className="text-sm sm:text-base text-neutral-600 dark:text-[#A39E95] mt-1 max-w-2xl font-normal leading-relaxed">
+              Full-stack web applications, native mobile architectures, and applied machine learning models built for production.
+            </p>
+          </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-3 mb-12 justify-center md:justify-start">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`px-6 py-3 rounded-full transition-all ${
-                activeFilter === filter
-                  ? "bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] text-white"
-                  : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-neutral-100 dark:bg-[#181716] rounded-xl border border-[#E6E0D6] dark:border-[#2B2824] shrink-0 font-mono">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setShowAll(false);
+                }}
+                className={`px-3.5 py-1.5 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer ${
+                  activeCategory === cat
+                    ? "bg-[#D96B27] text-white shadow-xs font-bold"
+                    : "text-neutral-600 dark:text-[#A39E95] hover:text-neutral-900 dark:hover:text-[#F5EFE6]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {displayedProjects.map((project, index) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {displayedProjects.map((project) => (
             <div
-              key={index}
-              className="group bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              key={project.id}
+              className="group bg-white dark:bg-[#181716] rounded-2xl overflow-hidden border border-[#E6E0D6] dark:border-[#2B2824] hover:border-[#D96B27]/50 transition-all duration-300 flex flex-col shadow-xs hover:shadow-md"
             >
-              <div className="relative h-48 overflow-hidden">
-                <img
+              {/* Thumbnail Container */}
+              <div className="relative aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-[#121110]">
+                <Image
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 text-4xl">
-                  {project.emoji}
+                <div className="absolute top-3 left-3 bg-[#121110]/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-mono text-[#F5EFE6] border border-[#2B2824] flex items-center gap-1.5 shadow-xs uppercase">
+                  <span>{project.emoji}</span>
+                  <span>{project.category.join(", ")}</span>
                 </div>
               </div>
 
-              <div className="p-6">
-                <h3 className="text-lg md:text-xl mb-2">{project.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.slice(0, 4).map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                  {project.tech.length > 4 && (
-                    <span className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 rounded-full">
-                      +{project.tech.length - 4}
-                    </span>
-                  )}
+              {/* Card Body */}
+              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-2xl tracking-wide text-neutral-900 dark:text-[#F5EFE6] group-hover:text-[#D96B27] transition-colors uppercase">
+                    {project.title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-neutral-600 dark:text-[#A39E95] line-clamp-3 leading-relaxed">
+                    {project.description}
+                  </p>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2">
-                  {project.links.live && (
-                    <a
-                      href={project.links.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 bg-[#0ea5e9] dark:bg-[#10b981] text-white rounded-lg hover:scale-105 transition-transform text-xs"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      Live
-                    </a>
-                  )}
-                  {project.links.api && (
-                    <a
-                      href={project.links.api}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:scale-105 transition-transform text-xs"
-                    >
-                      API
-                    </a>
-                  )}
-                  {project.links.download && (
-                    <a
-                      href={project.links.download}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 bg-[#0ea5e9] dark:bg-[#10b981] text-white rounded-lg hover:scale-105 transition-transform text-xs"
-                    >
-                      <Download className="w-3 h-3" />
-                      APK
-                    </a>
-                  )}
-                  {project.links.figma && (
-                    <a
-                      href={project.links.figma}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:scale-105 transition-transform text-xs"
-                    >
-                      <Figma className="w-3 h-3" />
-                      Design
-                    </a>
-                  )}
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 border border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-lg hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all text-xs"
-                    >
-                      <Github className="w-3 h-3" />
-                      Code
-                    </a>
-                  )}
-                  {project.links.githubFrontend && (
-                    <a
-                      href={project.links.githubFrontend}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 border border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-lg hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all text-xs"
-                    >
-                      <Github className="w-3 h-3" />
-                      Frontend
-                    </a>
-                  )}
-                  {project.links.githubBackend && (
-                    <a
-                      href={project.links.githubBackend}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 border border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-lg hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all text-xs"
-                    >
-                      <Github className="w-3 h-3" />
-                      Backend
-                    </a>
-                  )}
+                {/* Tech Pills */}
+                <div className="mt-5 pt-4 border-t border-[#E6E0D6] dark:border-[#2B2824]">
+                  <div className="flex flex-wrap gap-1.5 mb-4 font-mono">
+                    {project.tech.slice(0, 4).map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-neutral-100 dark:bg-[#201E1C] text-neutral-700 dark:text-[#F5EFE6] border border-[#E6E0D6] dark:border-[#2B2824]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {project.tech.length > 4 && (
+                      <span className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-neutral-100 dark:bg-[#201E1C] text-neutral-500 font-mono">
+                        +{project.tech.length - 4}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action Link Buttons */}
+                  <div className="flex items-center gap-2 flex-wrap font-mono text-xs">
+                    {project.links.live && (
+                      <a
+                        href={project.links.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D96B27] hover:bg-[#C85A17] text-white uppercase tracking-wider transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Live Demo</span>
+                      </a>
+                    )}
+                    {project.links.download && (
+                      <a
+                        href={project.links.download}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white uppercase tracking-wider transition-colors"
+                      >
+                        <Download className="w-3 h-3" />
+                        <span>Download</span>
+                      </a>
+                    )}
+                    {project.links.figma && (
+                      <a
+                        href={project.links.figma}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-[#201E1C] text-neutral-700 dark:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#2B2824] transition-colors"
+                      >
+                        <Figma className="w-3 h-3 text-[#D96B27]" />
+                        <span>Figma</span>
+                      </a>
+                    )}
+                    {project.links.github && (
+                      <a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-[#38342F] text-neutral-700 dark:text-[#F5EFE6] hover:bg-neutral-100 dark:hover:bg-[#201E1C] transition-colors"
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                    {project.links.githubFrontend && (
+                      <a
+                        href={project.links.githubFrontend}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-[#38342F] text-neutral-700 dark:text-[#F5EFE6] hover:bg-neutral-100 dark:hover:bg-[#201E1C] transition-colors"
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>Frontend</span>
+                      </a>
+                    )}
+                    {project.links.githubBackend && (
+                      <a
+                        href={project.links.githubBackend}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-[#38342F] text-neutral-700 dark:text-[#F5EFE6] hover:bg-neutral-100 dark:hover:bg-[#201E1C] transition-colors"
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>Backend</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="flex justify-center mt-12 gap-4">
-          {hasMoreProjects && !showAll && (
+        {/* Expand / Collapse More Projects Button */}
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {hasMore && (
             <button
-              onClick={() => setShowAll(true)}
-              className="px-8 py-4 border-2 border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-full hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all flex items-center gap-2"
+              onClick={() => setShowAll(!showAll)}
+              className="px-6 py-2.5 rounded-full font-mono text-xs font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-[#181716] text-neutral-800 dark:text-[#F5EFE6] hover:border-[#D96B27] transition-all flex items-center gap-2 cursor-pointer border border-[#E6E0D6] dark:border-[#2B2824]"
             >
-              See More Projects ({filteredProjects.length - 6} more)
+              {showAll ? (
+                <>
+                  <ChevronUp className="w-4 h-4 text-[#D96B27]" />
+                  <span>Show Fewer Projects</span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4 text-[#D96B27]" />
+                  <span>View All Projects ({filteredProjects.length})</span>
+                </>
+              )}
             </button>
           )}
-          {showAll && hasMoreProjects && (
-            <button
-              onClick={() => setShowAll(false)}
-              className="px-8 py-4 border-2 border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-full hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all flex items-center gap-2"
-            >
-              Show Less
-            </button>
-          )}
+
           <a
             href="https://github.com/RifatHossaiN47?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] text-white rounded-full hover:scale-105 transition-transform flex items-center gap-2"
+            className="px-6 py-2.5 rounded-full font-mono text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-[#A39E95] hover:text-[#D96B27] transition-colors flex items-center gap-1.5"
           >
-            <Github className="w-5 h-5" />
-            View All on GitHub
+            <Github className="w-4 h-4" />
+            <span>GitHub Repositories Archive →</span>
           </a>
         </div>
       </div>

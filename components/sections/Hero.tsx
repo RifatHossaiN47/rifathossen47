@@ -1,179 +1,229 @@
-// Next.js App Router version - Hero section component
-// Copy from /components/Hero.tsx with Next.js imports
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Github,
   Linkedin,
   Mail,
   FileText,
-  Youtube,
-  MapPin,
-  Briefcase,
+  ArrowRight,
+  BookOpen,
+  Code2,
+  Award,
 } from "lucide-react";
-import rifat from "../../public/rifat.jpg";
-import { FaOrcid, FaResearchgate, FaFacebook } from "react-icons/fa";
+import { FaOrcid, FaResearchgate } from "react-icons/fa";
 import { SiGooglescholar } from "react-icons/si";
-import Image from "next/image";
+import rifatImg from "../../public/rifat.jpg";
+import { siteConfig } from "../../lib/portfolio-data";
+
 export function Hero() {
   const [titleIndex, setTitleIndex] = useState(0);
-  const titles = [
-    "AI Researcher",
-    "Full-Stack Developer",
-    "IEEE Published Author",
-  ];
+  const titles = siteConfig.personal.titles;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTitleIndex((prev) => (prev + 1) % titles.length);
-    }, 2000);
+    }, 2800);
     return () => clearInterval(interval);
-  }, []);
+  }, [titles.length]);
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-6 md:px-12 pt-20">
-      <div className="max-w-[1440px] w-full">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Text Content */}
-          <div className="space-y-6 md:space-y-8 text-center md:text-left order-2 md:order-1">
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-                <span className="bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] bg-clip-text text-transparent animate-gradient">
-                  Hi, I&apos;m <br /> Md Rifat Hossen
-                </span>
+    <section
+      id="about"
+      className="relative min-h-[94vh] flex items-center justify-center pt-24 pb-16 px-5 sm:px-8 bg-ambient-glow"
+    >
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Left Text & Impact Summary (7 Columns) */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left order-2 lg:order-1">
+            {/* Professional Role Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider text-[#D96B27] bg-[#D96B27]/10 border border-[#D96B27]/30 uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#D96B27] animate-pulse" />
+              <span>SOFTWARE ENGINEER & ML RESEARCHER</span>
+            </div>
+
+            {/* Main Headline */}
+            <div className="space-y-2">
+              <h1 className="font-display text-4xl sm:text-6xl md:text-7xl xl:text-8xl tracking-tight leading-none text-neutral-900 dark:text-[#F5EFE6] uppercase">
+                MD RIFAT <span className="text-[#D96B27]">HOSSEN</span>
               </h1>
-              <div className="h-8 md:h-10">
-                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 transition-opacity duration-500">
+
+              {/* Dynamic Role Switcher */}
+              <div className="h-8 flex items-center justify-center lg:justify-start">
+                <p className="font-mono text-sm sm:text-base font-semibold tracking-wider text-[#D96B27] dark:text-[#E27429] uppercase">
                   {titles[titleIndex]}
                 </p>
               </div>
+
+              {/* Humanized Professional Summary */}
+              <p className="text-sm sm:text-base text-neutral-600 dark:text-[#C7C2BA] max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal pt-1">
+                Full-stack developer and applied AI researcher specializing in scalable web and mobile systems, low-resource Bengali NLP, and explainable computer vision. Technical Lead at KREMS Technologies with 6 peer-reviewed papers published in Springer Nature (Q2 Journal) and IEEE.
+              </p>
             </div>
 
-            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto md:mx-0">
-              4th Year CS Student at CUET | Building intelligent systems and
-              scalable applications
-            </p>
-
-            <div className="flex items-center gap-3 justify-center md:justify-start">
-              <Mail className="w-5 h-5 text-[#0ea5e9] dark:text-[#10b981]" />
-              <a
-                href="mailto:rifat8851@gmail.com"
-                className="text-gray-600 dark:text-gray-300 hover:text-[#0ea5e9] dark:hover:text-[#10b981] transition-colors"
-              >
-                rifat8851@gmail.com
-              </a>
+            {/* Metrics Highlights Grid */}
+            <div className="pt-2">
+              <p className="text-[11px] font-mono tracking-wider text-neutral-400 dark:text-[#8C877D] uppercase mb-2.5">
+                KEY HIGHLIGHTS //
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="p-3.5 bg-white dark:bg-[#181716] rounded-xl border border-[#E6E0D6] dark:border-[#2B2824] text-center lg:text-left shadow-xs hover:border-[#D96B27]/40 transition-colors">
+                  <p className="font-display text-3xl tracking-wide text-neutral-900 dark:text-[#F5EFE6]">
+                    06
+                  </p>
+                  <p className="text-[11px] font-mono text-neutral-500 dark:text-[#A39E95]">
+                    Published Papers
+                  </p>
+                </div>
+                <div className="p-3.5 bg-white dark:bg-[#181716] rounded-xl border border-[#E6E0D6] dark:border-[#2B2824] text-center lg:text-left shadow-xs hover:border-[#D96B27]/40 transition-colors">
+                  <p className="font-display text-3xl tracking-wide text-[#D96B27]">
+                    3.60
+                  </p>
+                  <p className="text-[11px] font-mono text-neutral-500 dark:text-[#A39E95]">
+                    Graduated CGPA
+                  </p>
+                </div>
+                <div className="p-3.5 bg-white dark:bg-[#181716] rounded-xl border border-[#E6E0D6] dark:border-[#2B2824] text-center lg:text-left shadow-xs hover:border-[#D96B27]/40 transition-colors">
+                  <p className="font-display text-3xl tracking-wide text-neutral-900 dark:text-[#F5EFE6]">
+                    LEAD
+                  </p>
+                  <p className="text-[11px] font-mono text-neutral-500 dark:text-[#A39E95]">
+                    KREMS Technologies
+                  </p>
+                </div>
+                <div className="p-3.5 bg-white dark:bg-[#181716] rounded-xl border border-[#E6E0D6] dark:border-[#2B2824] text-center lg:text-left shadow-xs hover:border-[#D96B27]/40 transition-colors">
+                  <p className="font-display text-3xl tracking-wide text-[#D96B27]">
+                    834+
+                  </p>
+                  <p className="text-[11px] font-mono text-neutral-500 dark:text-[#A39E95]">
+                    Active Transit Users
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Social Links */}
-            <div className="flex gap-4 justify-center md:justify-start">
-              <a
-                href="https://github.com/RifatHossaiN47"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a
-                href="https://linkedin.com/in/rifathossain47"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="https://orcid.org/0009-0004-7835-3794"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="orcid id"
-              >
-                <FaOrcid className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.researchgate.net/profile/Md-Rifat-Hossen-3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="ResearchGate"
-              >
-                <FaResearchgate className="w-5 h-5" />
-              </a>
-              <a
-                href="https://scholar.google.com/citations?user=kJRow6AAAAAJ&hl=en"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="Google Scholar"
-              >
-                <SiGooglescholar className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.facebook.com/rifathossain4777"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="Facebook"
-              >
-                <FaFacebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://youtube.com/@RifatHossaiNBro"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-110"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            {/* Primary Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
               <button
-                onClick={() =>
-                  document
-                    .querySelector("#research")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="px-6 py-3 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] text-white rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2"
+                onClick={() => scrollTo("projects")}
+                className="px-6 py-3 bg-[#D96B27] hover:bg-[#C85A17] dark:bg-[#D96B27] dark:hover:bg-[#E27429] text-white rounded-xl font-mono text-xs font-semibold uppercase tracking-wider transition-all hover:scale-[1.02] flex items-center gap-2 cursor-pointer shadow-sm"
               >
-                <FileText className="w-5 h-5" />
-                View Research
+                <span>→ View Projects</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
+
               <button
-                onClick={() =>
-                  document
-                    .querySelector("#projects")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full hover:scale-105 transition-all flex items-center justify-center gap-2"
+                onClick={() => scrollTo("publications")}
+                className="px-6 py-3 bg-neutral-100 dark:bg-[#1C1B19] text-neutral-800 dark:text-[#F5EFE6] rounded-xl font-mono text-xs font-semibold uppercase tracking-wider hover:bg-neutral-200 dark:hover:bg-[#252320] transition-all hover:scale-[1.02] flex items-center gap-2 cursor-pointer border border-[#E6E0D6] dark:border-[#2B2824]"
               >
-                <Briefcase className="w-5 h-5" />
-                See Projects
+                <BookOpen className="w-4 h-4 text-[#D96B27]" />
+                <span>→ Research Papers</span>
               </button>
+
               <a
-                href="/Rifat_Hossen_CV.pdf"
+                href={siteConfig.personal.cvUrl}
                 download="Rifat_Hossen_CV.pdf"
-                className="px-6 py-3 border-2 border-[#0ea5e9] dark:border-[#10b981] text-[#0ea5e9] dark:text-[#10b981] rounded-full hover:bg-[#0ea5e9] dark:hover:bg-[#10b981] hover:text-white transition-all hover:scale-105 flex items-center justify-center gap-2"
+                className="px-6 py-3 border border-neutral-300 dark:border-[#38342F] text-neutral-700 dark:text-[#F5EFE6] rounded-xl font-mono text-xs font-semibold uppercase tracking-wider hover:bg-neutral-100 dark:hover:bg-[#1C1B19] transition-all flex items-center gap-2"
               >
-                <FileText className="w-5 h-5" />
-                Download CV
+                <FileText className="w-4 h-4 text-[#D96B27]" />
+                <span>Download CV</span>
+              </a>
+            </div>
+
+            {/* Academic & Professional Social Links */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2">
+              <a
+                href={siteConfig.personal.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg bg-neutral-100 dark:bg-[#181716] text-neutral-700 dark:text-[#A39E95] hover:text-[#D96B27] dark:hover:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#201E1C] transition-all border border-transparent dark:border-[#2B2824]"
+                aria-label="GitHub Profile"
+                title="GitHub"
+              >
+                <Github className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.personal.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg bg-neutral-100 dark:bg-[#181716] text-neutral-700 dark:text-[#A39E95] hover:text-[#D96B27] dark:hover:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#201E1C] transition-all border border-transparent dark:border-[#2B2824]"
+                aria-label="LinkedIn Profile"
+                title="LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.personal.social.scholar}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg bg-neutral-100 dark:bg-[#181716] text-neutral-700 dark:text-[#A39E95] hover:text-[#D96B27] dark:hover:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#201E1C] transition-all border border-transparent dark:border-[#2B2824]"
+                aria-label="Google Scholar"
+                title="Google Scholar"
+              >
+                <SiGooglescholar className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.personal.social.researchgate}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg bg-neutral-100 dark:bg-[#181716] text-neutral-700 dark:text-[#A39E95] hover:text-[#D96B27] dark:hover:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#201E1C] transition-all border border-transparent dark:border-[#2B2824]"
+                aria-label="ResearchGate"
+                title="ResearchGate"
+              >
+                <FaResearchgate className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.personal.social.orcid}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg bg-neutral-100 dark:bg-[#181716] text-neutral-700 dark:text-[#A39E95] hover:text-[#D96B27] dark:hover:text-[#F5EFE6] hover:bg-neutral-200 dark:hover:bg-[#201E1C] transition-all border border-transparent dark:border-[#2B2824]"
+                aria-label="ORCID"
+                title="ORCID"
+              >
+                <FaOrcid className="w-4 h-4" />
+              </a>
+              <span className="h-4 w-px bg-neutral-300 dark:bg-[#2B2824] mx-1" />
+              <a
+                href={`mailto:${siteConfig.personal.email}`}
+                className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-[#A39E95] hover:text-[#D96B27] transition-colors font-mono"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#D96B27]" />
+                <span>{siteConfig.personal.email}</span>
               </a>
             </div>
           </div>
 
-          {/* Avatar */}
-          <div className="flex justify-center order-1 md:order-2">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] rounded-full blur-2xl opacity-30 animate-pulse" />
-              <Image
-                src={rifat}
-                alt="Rifat Hossain"
-                className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-full border-4 border-white dark:border-[#0a0a0a] shadow-2xl"
-              />
+          {/* Right Column: Formal Refined Portrait Presentation */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center order-1 lg:order-2">
+            <div className="relative group">
+              {/* Soft ambient backglow */}
+              <div className="absolute inset-0 bg-[#D96B27]/20 rounded-3xl blur-2xl -z-10 group-hover:bg-[#D96B27]/30 transition-colors" />
+
+              {/* Formal Double Frame for Profile Picture */}
+              <div className="p-2 rounded-3xl bg-white dark:bg-[#181716] border-2 border-[#E6E0D6] dark:border-[#2B2824] shadow-xl hover:border-[#D96B27]/50 transition-colors">
+                <div className="relative w-64 h-64 sm:w-76 sm:h-76 md:w-80 md:h-80 xl:w-88 xl:h-88 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-[#141312]">
+                  <Image
+                    src={rifatImg}
+                    alt={siteConfig.personal.name}
+                    fill
+                    sizes="(max-width: 768px) 320px, 384px"
+                    priority
+                    className="object-cover object-top hover:scale-[1.03] transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Dignified Formal Status Caption Below Picture */}
+            <div className="mt-5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#181716] border border-[#E6E0D6] dark:border-[#2B2824] shadow-xs font-mono text-xs text-neutral-700 dark:text-[#A39E95]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Available for Software & AI Engineering Roles</span>
             </div>
           </div>
         </div>

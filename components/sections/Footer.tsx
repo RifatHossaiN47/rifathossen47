@@ -1,12 +1,10 @@
-// Next.js App Router version - Footer component
 "use client";
 
-import { ArrowUp, Lock } from "lucide-react";
+import { ArrowUp, Lock, BookOpen } from "lucide-react";
 import Link from "next/link";
-import { useTheme } from "../ThemeProvider";
+import { siteConfig } from "../../lib/portfolio-data";
 
 export function Footer() {
-  const { theme } = useTheme();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
@@ -14,48 +12,62 @@ export function Footer() {
   };
 
   return (
-    <footer className="py-12 px-6 md:px-12 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-800">
-      <div className="max-w-[1440px] mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
-            <p className="text-gray-600 dark:text-gray-400">
-              © {currentYear} Md Rifat Hossen. All rights reserved.
+    <footer className="py-14 px-5 sm:px-8 border-t border-[#E6E0D6] dark:border-[#2B2824] bg-white dark:bg-[#121110]">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Formal Signature Stamp */}
+        <div className="p-6 rounded-2xl bg-neutral-50 dark:bg-[#181716] border border-[#E6E0D6] dark:border-[#2B2824] max-w-xl mx-auto text-center space-y-1.5">
+          <p className="font-display text-2xl tracking-wide text-neutral-900 dark:text-[#F5EFE6] uppercase">
+            MD RIFAT HOSSEN
+          </p>
+          <p className="font-mono text-xs text-[#D96B27] tracking-wider uppercase">
+            Software Engineering & Machine Learning Systems
+          </p>
+          <p className="text-xs text-neutral-500 dark:text-[#8C877D]">
+            Chattogram, Bangladesh • Open to Engineering & AI Research Roles
+          </p>
+        </div>
+
+        {/* Bottom Metadata & Controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-neutral-500 dark:text-[#A39E95] pt-4 border-t border-[#E6E0D6]/60 dark:border-[#2B2824]/60">
+          <div>
+            <p>
+              © {currentYear} {siteConfig.personal.name}. All rights reserved.
+            </p>
+            <p className="text-[11px] text-neutral-400 dark:text-[#8C877D] mt-0.5">
+              Engineered with Next.js 16 (Turbopack), React 19, TypeScript & Tailwind CSS.
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Rifat's Lab Button - More Prominent */}
+          <div className="flex items-center gap-3">
+            {/* Technical Blog */}
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E6E0D6] dark:border-[#2B2824] hover:border-[#D96B27] text-neutral-600 dark:text-[#A39E95] hover:text-[#D96B27] transition-colors uppercase tracking-wider text-[11px]"
+              title="Technical Writing & Blog"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-[#D96B27]" />
+              <span>Articles</span>
+            </Link>
+
+            {/* Rifat's Lab Access */}
             <Link
               href="/lab/login"
-              className="group flex items-center gap-2 px-6 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-full hover:border-[#0ea5e9] dark:hover:border-[#10b981] hover:shadow-lg hover:shadow-[#0ea5e9]/20 dark:hover:shadow-[#10b981]/20 transition-all hover:scale-105"
-              title="Rifat's Lab - Admin Access"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E6E0D6] dark:border-[#2B2824] hover:border-[#D96B27] text-neutral-600 dark:text-[#A39E95] hover:text-[#D96B27] transition-colors uppercase tracking-wider text-[11px]"
+              title="Admin Portal Access"
             >
-              <Lock className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-[#0ea5e9] dark:group-hover:text-[#10b981] transition-colors" />
-              <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-[#0ea5e9] dark:group-hover:text-[#10b981] transition-colors">
-                Rifat&apos;s Lab
-              </span>
+              <Lock className="w-3.5 h-3.5 text-[#D96B27]" />
+              <span>Rifat&apos;s Lab</span>
             </Link>
 
             {/* Back to Top */}
             <button
               onClick={scrollToTop}
-              className="p-3 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] dark:from-[#10b981] dark:to-[#06b6d4] text-white rounded-full hover:scale-110 transition-transform shadow-lg"
+              className="p-2 rounded-lg bg-neutral-100 dark:bg-[#181716] hover:bg-[#D96B27] hover:text-white dark:hover:bg-[#D96B27] text-neutral-700 dark:text-[#F5EFE6] border border-[#E6E0D6] dark:border-[#2B2824] transition-colors cursor-pointer"
               aria-label="Back to top"
+              title="Back to top"
             >
-              <ArrowUp className="w-5 h-5" />
+              <ArrowUp className="w-4 h-4" />
             </button>
-          </div>
-        </div>
-
-        {/* Thank You Message */}
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
-          <div className="max-w-2xl mx-auto space-y-2">
-            <p className="text-gray-700 dark:text-gray-300 font-medium">
-              Thank you for visiting my Portfolio!
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Available for collaborations & opportunities
-            </p>
           </div>
         </div>
       </div>
