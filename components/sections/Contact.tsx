@@ -14,9 +14,11 @@ import {
   MessageSquare,
   AlertCircle,
 } from "lucide-react";
-import { siteConfig } from "../../lib/portfolio-data";
+import { siteConfig as defaultSiteConfig } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Contact() {
+  const siteConfig = useSectionData("siteConfig", defaultSiteConfig);
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);

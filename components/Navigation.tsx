@@ -5,11 +5,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon, FileText, ChevronDown } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
-import { siteConfig } from "../lib/portfolio-data";
+import { siteConfig as defaultSiteConfig } from "../lib/portfolio-data";
+import { useSectionData } from "../lib/use-section-data";
 import rhLogo from "../public/logo.png";
 import rhLogoLight from "../public/logos.png";
 
 export function Navigation() {
+  const siteConfig = useSectionData("siteConfig", defaultSiteConfig);
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

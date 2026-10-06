@@ -15,9 +15,11 @@ import {
 import { FaOrcid, FaResearchgate } from "react-icons/fa";
 import { SiGooglescholar } from "react-icons/si";
 import rifatImg from "../../public/rifat.jpg";
-import { siteConfig } from "../../lib/portfolio-data";
+import { siteConfig as defaultSiteConfig } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Hero() {
+  const siteConfig = useSectionData("siteConfig", defaultSiteConfig);
   const [titleIndex, setTitleIndex] = useState(0);
   const titles = siteConfig.personal.titles;
 

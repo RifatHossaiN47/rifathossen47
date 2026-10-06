@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { ExternalLink, Briefcase, MapPin } from "lucide-react";
-import { experiences } from "../../lib/portfolio-data";
+import { experiences as defaultExperiences } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Experience() {
+  const experiences = useSectionData("experiences", defaultExperiences);
   return (
     <section id="experience" className="py-20 px-5 sm:px-8 border-t border-[#E6E0D6] dark:border-[#2B2824]">
       <div className="max-w-5xl mx-auto">

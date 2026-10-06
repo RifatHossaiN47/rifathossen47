@@ -242,4 +242,120 @@ export const blogService = {
     }
     return newComment;
   },
+
+  // Firestore Async Integrations (with local cache mirroring)
+  fetchPostsFromFirestore: async (): Promise<BlogPost[]> => {
+    if (typeof window === "undefined") return INITIAL_BLOG_POSTS;
+    try {
+      const { getDb } = await import("./firebase");
+      const { collection, getDocs } = await import("firebase/firestore/lite");
+      const { BLOG_POSTS_COLLECTION } = await import("./content-source");
+      const snap = await getDocs(collection(getDb(), BLOG_POSTS_COLLECTION));
+      if (!snap.empty) {
+        const posts: BlogPost[] = snap.docs.map((d) => d.data() as BlogPost);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        return posts;
+      }
+    } catch (err) {
+      console.warn("[blogService] Error fetching posts from Firestore:", err);
+    }
+    return blogService.getAllPosts();
+  },
+
+  fetchPostBySlugFromFirestore: async (slug: string): Promise<BlogPost | undefined> => {
+    const posts = await blogService.fetchPostsFromFirestore();
+    return posts.find((p) => p.slug === slug);
+  },
+
+  savePostToFirestore: async (post: BlogPost): Promise<void> => {
+    // Save to local cache first
+    const posts = blogService.getAllPosts();
+    const idx = posts.findIndex((p) => p.id === post.id);
+    let updated: BlogPost[];
+    if (idx >= 0) {
+      posts[idx] = post;
+      updated = posts;
+    } else {
+      updated = [post, ...posts];
+    }
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    }
+    // Then persist to Firestore
+    try {
+      const { getDb } = await import("./firebase");
+      const { doc, setDoc } = await import("firebase/firestore/lite");
+      const { BLOG_POSTS_COLLECTION } = await import("./content-source");
+      await setDoc(doc(getDb(), BLOG_POSTS_COLLECTION, post.id), post);
+    } catch (err) {
+      console.error("[blogService] Failed to save post to Firestore:", err);
+      throw err;
+    }
+  },
+
+  deletePostFromFirestore: async (id: string): Promise<void> => {
+    blogService.deletePost(id);
+    try {
+      const { getDb } = await import("./firebase");
+      const { doc, deleteDoc } = await import("firebase/firestore/lite");
+      const { BLOG_POSTS_COLLECTION } = await import("./content-source");
+      await deleteDoc(doc(getDb(), BLOG_POSTS_COLLECTION, id));
+    } catch (err) {
+      console.error("[blogService] Failed to delete post from Firestore:", err);
+      throw err;
+    }
+  },
+
+  fetchCommentsFromFirestore: async (slug: string): Promise<BlogComment[]> => {
+    if (typeof window === "undefined") return [];
+    try {
+      const { getDb } = await import("./firebase");
+      const { collection, getDocs } = await import("firebase/firestore/lite");
+      const { BLOG_COMMENTS_COLLECTION } = await import("./content-source");
+      const snap = await getDocs(collection(getDb(), BLOG_COMMENTS_COLLECTION));
+      if (!snap.empty) {
+        const comments = snap.docs
+          .map((d) => d.data() as BlogComment)
+          .filter((c) => c.slug === slug);
+        if (comments.length > 0) {
+          localStorage.setItem(`${COMMENTS_PREFIX}${slug}`, JSON.stringify(comments));
+          return comments;
+        }
+      }
+    } catch (err) {
+      console.warn("[blogService] Error fetching comments from Firestore:", err);
+    }
+    return blogService.getComments(slug);
+  },
+
+  addCommentToFirestore: async (
+    slug: string,
+    comment: Omit<BlogComment, "id" | "slug" | "date"> & { email?: string }
+  ): Promise<BlogComment> => {
+    const localNew = blogService.addComment(slug, comment);
+    try {
+      const { getDb } = await import("./firebase");
+      const { doc, setDoc, serverTimestamp } = await import("firebase/firestore/lite");
+      const { BLOG_COMMENTS_COLLECTION, BLOG_COMMENT_CONTACTS_COLLECTION } = await import("./content-source");
+      const commentId = localNew.id;
+      await setDoc(doc(getDb(), BLOG_COMMENTS_COLLECTION, commentId), {
+        slug,
+        name: comment.name,
+        text: comment.text,
+        date: localNew.date,
+        createdAt: serverTimestamp(),
+      });
+      if (comment.email && comment.email.trim()) {
+        await setDoc(doc(getDb(), BLOG_COMMENT_CONTACTS_COLLECTION, commentId), {
+          slug,
+          email: comment.email.trim(),
+          createdAt: serverTimestamp(),
+        });
+      }
+    } catch (err) {
+      console.warn("[blogService] Could not persist comment to Firestore:", err);
+    }
+    return localNew;
+  },
 };
+

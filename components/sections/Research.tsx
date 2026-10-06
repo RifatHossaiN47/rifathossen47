@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { ExternalLink, Github, BookOpen, Award, ChevronDown, ChevronUp } from "lucide-react";
-import { publications, PublicationItem } from "../../lib/portfolio-data";
+import { publications as defaultPublications, PublicationItem } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Research() {
+  const publications = useSectionData("publications", defaultPublications);
   const [showAllPapers, setShowAllPapers] = useState(false);
 
   const displayedPapers = showAllPapers ? publications : publications.slice(0, 3);
@@ -20,6 +22,8 @@ export function Research() {
         return "bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border-emerald-500/30";
       case "arXiv":
         return "bg-purple-500/10 text-purple-500 dark:text-purple-400 border-purple-500/30";
+      case "ResearchGate":
+        return "bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30";
       default:
         return "bg-neutral-100 dark:bg-[#201E1C] text-neutral-700 dark:text-[#A39E95] border-[#2B2824]";
     }
@@ -45,7 +49,7 @@ export function Research() {
 
           <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#181716] border border-[#E6E0D6] dark:border-[#2B2824] text-xs font-mono text-neutral-700 dark:text-[#F5EFE6] shrink-0">
             <Award className="w-4 h-4 text-[#D96B27]" />
-            <span>6 Peer-Reviewed Papers (Springer & IEEE)</span>
+            <span>6 Peer-Reviewed Papers + 1 Research Poster</span>
           </div>
         </div>
 
@@ -123,7 +127,7 @@ export function Research() {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D96B27] hover:bg-[#C85A17] text-white uppercase tracking-wider transition-opacity"
                   >
                     <ExternalLink className="w-3 h-3" />
-                    <span>Publication</span>
+                    <span>{paper.publisher === "ResearchGate" ? "DOI / ResearchGate" : "Publication"}</span>
                   </a>
                 )}
 

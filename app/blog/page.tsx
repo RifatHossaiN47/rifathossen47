@@ -14,6 +14,11 @@ export default function BlogPage() {
 
   useEffect(() => {
     setBlogs(blogService.getAllPosts());
+    blogService.fetchPostsFromFirestore().then((posts) => {
+      if (posts && posts.length > 0) {
+        setBlogs(posts);
+      }
+    });
   }, []);
 
   const categories = [

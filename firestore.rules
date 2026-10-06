@@ -1,0 +1,176 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: portfolio            (public read, admin write)
+// Document ID: one of the section ids listed in isPortfolioSection()
+// Fields:
+//   - data: list | map (required) - exact copy of the matching export in lib/portfolio-data.ts
+//   - source: string (optional, <= 200 chars) - where the data came from
+//   - updatedAt: timestamp (required, must equal request.time)
+//
+// Collection: blogPosts            (public read of published posts, admin write)
+// Document ID: same as the `id` field (e.g. "post-1")
+// Fields (all required):
+//   - id: string (1-100, == document id)
+//   - slug: string (1-150, lowercase letters, digits, hyphens)
+//   - title: string (1-300)
+//   - excerpt: string (0-2000)
+//   - category: string (1-100)
+//   - date: string (1-40) - display date, e.g. "Dec 10, 2025"
+//   - readTime: string (0-40)
+//   - author: string (1-100)
+//   - image: string (0-2000) - URL or /public path
+//   - published: bool
+//   - content: string (0-500000) - article HTML
+//   - tags: list (<= 30 items)
+//
+// Collection: blogComments         (public read + create, admin delete, immutable)
+// Fields (all required): slug (1-150), name (1-80), text (1-2000), date (1-40),
+//   createdAt (timestamp == request.time)
+//
+// Collection: blogCommentContacts  (public create only, admin read/delete)
+// Document ID: same id as the matching blogComments doc
+// Fields (all required): email (valid, <= 254), slug (1-150), createdAt (== request.time)
+// Emails are kept here (private) instead of in public comments.
+//
+// Everything else: denied.
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------
+    // Helper Functions
+    // ---------------------------------------------------------------
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // The single portfolio owner account (Firebase Auth UID).
+    function isAdmin() {
+      return isAuthenticated() && request.auth.uid == 'cyhaUkuDnMOe8wdhmhXF3dUsdzy1';
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isStr(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.size() <= 254 &&
+        email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    function isValidSlug(slug) {
+      return isStr(slug, 1, 150) && slug.matches('^[a-z0-9]+(-[a-z0-9]+)*$');
+    }
+
+    // ---------------------------------------------------------------
+    // Domain Validators
+    // ---------------------------------------------------------------
+    function isPortfolioSection(id) {
+      return id in [
+        'siteConfig', 'experiences', 'publications', 'projects',
+        'skillCategories', 'competitiveProgramming', 'problemSolvingTopics',
+        'education', 'certifications', 'leadership', 'creative'
+      ];
+    }
+
+    function isValidPortfolioDoc(data) {
+      return hasOnlyAllowedFields(['data', 'source', 'updatedAt']) &&
+        hasRequiredFields(['data', 'updatedAt']) &&
+        (data.data is list || data.data is map) &&
+        (!('source' in data) || isStr(data.source, 0, 200)) &&
+        data.updatedAt == request.time;
+    }
+
+    function isValidBlogPost(data, postId) {
+      let fields = ['id', 'slug', 'title', 'excerpt', 'category', 'date',
+                    'readTime', 'author', 'image', 'published', 'content', 'tags'];
+      return hasOnlyAllowedFields(fields) &&
+        hasRequiredFields(fields) &&
+        isStr(data.id, 1, 100) && data.id == postId &&
+        isValidSlug(data.slug) &&
+        isStr(data.title, 1, 300) &&
+        isStr(data.excerpt, 0, 2000) &&
+        isStr(data.category, 1, 100) &&
+        isStr(data.date, 1, 40) &&
+        isStr(data.readTime, 0, 40) &&
+        isStr(data.author, 1, 100) &&
+        isStr(data.image, 0, 2000) &&
+        data.published is bool &&
+        isStr(data.content, 0, 500000) &&
+        data.tags is list && data.tags.size() <= 30;
+    }
+
+    function isValidComment(data) {
+      let fields = ['slug', 'name', 'text', 'date', 'createdAt'];
+      return hasOnlyAllowedFields(fields) &&
+        hasRequiredFields(fields) &&
+        isValidSlug(data.slug) &&
+        isStr(data.name, 1, 80) &&
+        isStr(data.text, 1, 2000) &&
+        isStr(data.date, 1, 40) &&
+        data.createdAt == request.time;
+    }
+
+    function isValidCommentContact(data) {
+      let fields = ['email', 'slug', 'createdAt'];
+      return hasOnlyAllowedFields(fields) &&
+        hasRequiredFields(fields) &&
+        isValidEmail(data.email) &&
+        isValidSlug(data.slug) &&
+        data.createdAt == request.time;
+    }
+
+    // ---------------------------------------------------------------
+    // Rules
+    // ---------------------------------------------------------------
+
+    // Portfolio sections: public website content (explicitly requested public).
+    match /portfolio/{sectionId} {
+      allow read: if isPortfolioSection(sectionId);
+      allow create, update: if isAdmin() && isPortfolioSection(sectionId) &&
+        isValidPortfolioDoc(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Blog posts: anyone can read published posts; only admin sees drafts / writes.
+    // Public queries must filter on published == true.
+    match /blogPosts/{postId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && isValidBlogPost(request.resource.data, postId);
+      allow delete: if isAdmin();
+    }
+
+    // Blog comments: public, append-only. Admin can moderate (delete).
+    match /blogComments/{commentId} {
+      allow read: if true;
+      allow create: if isValidComment(request.resource.data);
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Private commenter emails: write-only for visitors, readable by admin only.
+    match /blogCommentContacts/{commentId} {
+      allow create: if isValidCommentContact(request.resource.data);
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+
+    // Default deny for everything else.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

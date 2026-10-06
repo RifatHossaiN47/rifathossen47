@@ -68,7 +68,7 @@ export interface ExperienceItem {
 export interface PublicationItem {
   id: string;
   title: string;
-  publisher: "IEEE" | "Springer" | "ACM" | "arXiv" | "Elsevier" | "Other";
+  publisher: "IEEE" | "Springer" | "ACM" | "arXiv" | "Elsevier" | "ResearchGate" | "Other";
   venue: string;
   year: string;
   highlightMetric?: { label: string; value: string };
@@ -176,6 +176,14 @@ export interface DesignWorkItem {
   description: string;
 }
 
+export interface DesignCategoryItem {
+  name: string;
+  folder: string;
+  description: string;
+  highlights: string;
+  url: string;
+}
+
 export interface CreativeData {
   youtube: {
     channelName: string;
@@ -191,7 +199,8 @@ export interface CreativeData {
     description: string;
     tools: string[];
     githubUrl: string;
-    featuredWorks: DesignWorkItem[];
+    featuredWorks?: DesignWorkItem[];
+    categories?: DesignCategoryItem[];
   };
   blogs: BlogPostItem[];
   hobbies: {
@@ -412,13 +421,13 @@ export const publications: PublicationItem[] = [
     id: "evoting-poster",
     title:
       "E-Voting Systems: The Future of Secure & Transparent Elections",
-    publisher: "Other",
-    venue: "CUET CSE Academic Research Poster Presentation & Symposium",
+    publisher: "ResearchGate",
+    venue: "CUET CSE Academic Research Poster Showcase & Symposium (DOI: 10.13140/RG.2.2.12065.16483/1)",
     year: "2024",
     highlightMetric: { label: "Focus", value: "Blockchain & Cryptography" },
-    tags: ["Blockchain", "Homomorphic Encryption", "Biometrics", "Verifiable Auditing"],
+    tags: ["Blockchain", "Homomorphic Encryption", "Biometrics", "Verifiable Auditing", "E-Voting Security"],
     dataset: "Decentralized Election Protocol Architectures",
-    paperUrl: "https://github.com/RifatHossaiN47/research-poster-collection",
+    paperUrl: "https://doi.org/10.13140/RG.2.2.12065.16483/1",
     codeUrl: "https://github.com/RifatHossaiN47/research-poster-collection",
     featured: false,
   },
@@ -985,6 +994,50 @@ export const creativeData: CreativeData = {
       "Visual brand strategist, graphic artist, and motion editor. Crafting high-impact event branding, technical workshop posters, institutional crests, and motion animations for university organizations (IEEE CS CUET, CUET Computer Club, Dhaka College Association of CUET).",
     tools: ["Adobe Illustrator", "Adobe Photoshop", "Adobe Premiere Pro", "After Effects", "Figma", "Canva"],
     githubUrl: "https://github.com/RifatHossaiN47/Graphic-Design",
+    categories: [
+      {
+        name: "Event Posters & Banners",
+        folder: "Posters-and-Banners",
+        description: "Official IEEE event announcements, tech symposium banners, cultural festivals & sports fixture posters.",
+        highlights: "IEEE CS CUET, Blockchain Workshop, International Mother Language Day",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Posters-and-Banners",
+      },
+      {
+        name: "Logos & Brand Identity",
+        folder: "Logos-and-Branding",
+        description: "Institutional identity systems, student association crests, modern monogram marks & vector typography.",
+        highlights: "Dhaka College Association of CUET, 47 R Syndicate, Custom Emblems",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Logos-and-Branding",
+      },
+      {
+        name: "Motion Graphics & Openers",
+        folder: "Motion-and-Video",
+        description: "High-energy brand reveals, stroke line typography openers, circular wipe transitions & glitch loops.",
+        highlights: "The Fintick Show Intro, 47 R Syndicate Cyber Loop, Event Bumpers",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Motion-and-Video",
+      },
+      {
+        name: "Certificates & Honor Awards",
+        folder: "Certificates-and-Awards",
+        description: "Official competition certificates, executive appointment letters & academic achievement awards.",
+        highlights: "IEEE CS CUET Competitions, Workshop Completion Laurels",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Certificates-and-Awards",
+      },
+      {
+        name: "Editorial & Social Media",
+        folder: "Social-Media-and-Portraits",
+        description: "Executive committee spotlight cards, cultural tribute posts, editorial layouts & social banners.",
+        highlights: "President & General Secretary Panels, Holiday Celebrations",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Social-Media-and-Portraits",
+      },
+      {
+        name: "Production Vector Source Files",
+        folder: "Source-Files",
+        description: "Full editable vector project files with intact layer hierarchies, typography paths & composite smart objects.",
+        highlights: ".ai (Illustrator), .psd (Photoshop), .prproj / .aep project assets",
+        url: "https://github.com/RifatHossaiN47/Graphic-Design/tree/main/Source-Files",
+      },
+    ],
     featuredWorks: [
       {
         title: "CUET Squad Conquers Bandarban",

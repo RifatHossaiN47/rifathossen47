@@ -53,9 +53,13 @@ export default function DashboardPage() {
       return;
     }
 
-    // Load blogs from blogService
-    const allPosts = blogService.getAllPosts();
-    setBlogs(allPosts);
+    // Load blogs from blogService immediately, then sync from Firestore
+    setBlogs(blogService.getAllPosts());
+    blogService.fetchPostsFromFirestore().then((posts) => {
+      if (posts && posts.length > 0) {
+        setBlogs(posts);
+      }
+    });
   }, [router]);
 
   const showToast = (msg: string) => {
@@ -63,7 +67,12 @@ export default function DashboardPage() {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      const { getFirebaseAuth } = await import("../../../lib/firebase");
+      const { signOut } = await import("firebase/auth");
+      await signOut(getFirebaseAuth());
+    } catch {}
     localStorage.removeItem("rifat_lab_token");
     localStorage.removeItem("isAuthenticated");
     router.push("/lab/login");
@@ -103,9 +112,13 @@ export default function DashboardPage() {
     setIsEditorOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to permanently delete this article?")) {
-      blogService.deletePost(id);
+      try {
+        await blogService.deletePostFromFirestore(id);
+      } catch {
+        blogService.deletePost(id);
+      }
       setBlogs(blogService.getAllPosts());
       showToast("Article deleted successfully.");
     }
@@ -119,7 +132,7 @@ export default function DashboardPage() {
     }));
   };
 
-  const handleSavePost = (e: React.FormEvent) => {
+  const handleSavePost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
       alert("Please enter a title and slug.");
@@ -131,45 +144,36 @@ export default function DashboardPage() {
       .map((t) => t.trim())
       .filter(Boolean);
 
-    if (editingId) {
-      // Update existing post
-      blogService.updatePost(editingId, {
-        title: formData.title,
-        slug: formData.slug,
-        category: formData.category,
-        excerpt: formData.excerpt,
-        content: formData.content,
-        readTime: formData.readTime,
-        author: formData.author,
-        image: formData.image,
-        tags: tagsArray,
-        published: formData.published,
-      });
-      showToast("Article updated successfully!");
-    } else {
-      // Create new post
-      blogService.createPost({
-        title: formData.title,
-        slug: formData.slug,
-        category: formData.category,
-        excerpt: formData.excerpt,
-        content: formData.content,
-        date: new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        }),
-        readTime: formData.readTime,
-        author: formData.author,
-        image: formData.image,
-        tags: tagsArray,
-        published: formData.published,
-      });
-      showToast("New article published successfully!");
-    }
+    const postToSave: BlogPost = {
+      id: editingId || `post-${Date.now()}`,
+      title: formData.title,
+      slug: formData.slug,
+      category: formData.category,
+      excerpt: formData.excerpt,
+      content: formData.content,
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+      readTime: formData.readTime,
+      author: formData.author,
+      image: formData.image,
+      tags: tagsArray,
+      published: formData.published,
+    };
 
-    setBlogs(blogService.getAllPosts());
-    setIsEditorOpen(false);
+    try {
+      await blogService.savePostToFirestore(postToSave);
+      showToast(editingId ? "Article updated successfully!" : "New article published successfully!");
+      setBlogs(blogService.getAllPosts());
+      setIsEditorOpen(false);
+    } catch (err) {
+      console.error(err);
+      setBlogs(blogService.getAllPosts());
+      setIsEditorOpen(false);
+      showToast("Saved locally and scheduled sync.");
+    }
   };
 
   // Stats

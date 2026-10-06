@@ -11,9 +11,17 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { educationList, certificationsList, leadershipList } from "../../lib/portfolio-data";
+import {
+  educationList as defaultEducationList,
+  certificationsList as defaultCertificationsList,
+  leadershipList as defaultLeadershipList,
+} from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Education() {
+  const educationList = useSectionData("education", defaultEducationList);
+  const certificationsList = useSectionData("certifications", defaultCertificationsList);
+  const leadershipList = useSectionData("leadership", defaultLeadershipList);
   const [activeTab, setActiveTab] = useState<"education" | "certifications" | "leadership">("education");
   const [certFilter, setCertFilter] = useState<string>("All");
   const [showAllCerts, setShowAllCerts] = useState(false);

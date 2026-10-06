@@ -2,9 +2,11 @@
 
 import { ArrowUp, Lock, BookOpen } from "lucide-react";
 import Link from "next/link";
-import { siteConfig } from "../../lib/portfolio-data";
+import { siteConfig as defaultSiteConfig } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Footer() {
+  const siteConfig = useSectionData("siteConfig", defaultSiteConfig);
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {

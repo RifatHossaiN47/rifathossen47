@@ -11,12 +11,16 @@ import {
   Cpu,
 } from "lucide-react";
 import {
-  skillCategories,
-  competitiveProgrammingPlatforms,
-  problemSolvingTopics,
+  skillCategories as defaultSkillCategories,
+  competitiveProgrammingPlatforms as defaultCpPlatforms,
+  problemSolvingTopics as defaultProblemSolvingTopics,
 } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 export function Skills() {
+  const skillCategories = useSectionData("skillCategories", defaultSkillCategories);
+  const competitiveProgrammingPlatforms = useSectionData("competitiveProgramming", defaultCpPlatforms);
+  const problemSolvingTopics = useSectionData("problemSolvingTopics", defaultProblemSolvingTopics);
   const [activeTab, setActiveTab] = useState<"skills" | "cp">("skills");
 
   return (

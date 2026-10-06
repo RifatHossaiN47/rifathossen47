@@ -12,16 +12,18 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { projects, ProjectItem } from "../../lib/portfolio-data";
+import { useSectionData } from "../../lib/use-section-data";
 
 type FilterCategory = "All" | "Web" | "Mobile" | "ML/AI" | "Systems";
 
 export function Projects() {
+  const projectList = useSectionData("projects", projects);
   const [activeCategory, setActiveCategory] = useState<FilterCategory>("All");
   const [showAll, setShowAll] = useState(false);
 
   const categories: FilterCategory[] = ["All", "Web", "Mobile", "ML/AI", "Systems"];
 
-  const filteredProjects = projects.filter((p) => {
+  const filteredProjects = projectList.filter((p) => {
     if (activeCategory === "All") return true;
     return p.category.includes(activeCategory);
   });
