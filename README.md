@@ -166,7 +166,10 @@ cd rifathossen47
 # 3. Install dependencies
 npm install
 
-# 4. Start local development server
+# 4. Configure environment variables
+cp .env.example .env.local
+
+# 5. Start local development server
 npm run dev
 ```
 
@@ -233,10 +236,10 @@ firebase init hosting:github
 * Name of branch: `main`
 
 #### Step 2: Or Configure Secrets Manually
-If setting up manually, add your Firebase Service Account token as a secret in your GitHub repository:
+If setting up manually, add your secrets in your GitHub repository:
 1. Go to **GitHub Repository** → **Settings** → **Secrets and variables** → **Actions**.
-2. Add a new repository secret named `FIREBASE_SERVICE_ACCOUNT_RIFATHOSSEN47`.
-3. Paste your Firebase Service Account JSON key.
+2. Add a repository secret named `FIREBASE_SERVICE_ACCOUNT_RIFATHOSSEN47` (with your Firebase Service Account JSON key).
+3. Add a repository secret named `NEXT_PUBLIC_FIREBASE_API_KEY` (with your Firebase Web API key).
 
 #### Step 3: Workflow File
 Ensure `.github/workflows/firebase-hosting-merge.yml` contains:

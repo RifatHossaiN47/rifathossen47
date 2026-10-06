@@ -8,6 +8,16 @@
 //
 // By default existing Firestore documents are NOT overwritten, so edits you make
 // in Firestore later are never lost by re-running this script.
+if (typeof process.loadEnvFile === "function") {
+  try {
+    process.loadEnvFile(".env.local");
+  } catch {
+    try {
+      process.loadEnvFile(".env");
+    } catch {}
+  }
+}
+
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {

@@ -29,12 +29,14 @@ export default function LoginPage() {
       localStorage.setItem("rifat_lab_token", cred.user.uid);
       localStorage.setItem("isAuthenticated", "true");
       router.push("/lab/dashboard");
-    } catch (err: any) {
+    } catch {
+      const devPasscode = process.env.NEXT_PUBLIC_DEV_ADMIN_PASSCODE;
       if (
+        devPasscode &&
         credentials.email.trim() === "rifat8851@gmail.com" &&
-        (credentials.password === "780945" || credentials.password === "78094")
+        credentials.password === devPasscode
       ) {
-        localStorage.setItem("rifat_lab_token", "auth_session_780945");
+        localStorage.setItem("rifat_lab_token", "auth_session_dev");
         localStorage.setItem("isAuthenticated", "true");
         router.push("/lab/dashboard");
       } else {

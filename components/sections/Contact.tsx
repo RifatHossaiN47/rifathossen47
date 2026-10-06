@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
 import {
-  Mail,
   Github,
   Linkedin,
   Send,
@@ -45,11 +44,15 @@ export function Contact() {
     setIsSubmitting(true);
 
     try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_j38aw0r";
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_mlvl35i";
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "9Om0NKQMWA5y34NgK";
+
       await emailjs.sendForm(
-        "service_j38aw0r",
-        "template_mlvl35i",
+        serviceId,
+        templateId,
         formRef.current!,
-        "9Om0NKQMWA5y34NgK"
+        publicKey
       );
 
       setNotification({

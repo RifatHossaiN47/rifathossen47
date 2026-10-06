@@ -22,6 +22,18 @@ jobs:
 
       - name: Build Next.js Static Export
         run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'rifathossen47.firebaseapp.com' }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'rifathossen47' }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'rifathossen47.firebasestorage.app' }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '400409906850' }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID || '1:400409906850:web:43778c9f56834025fd51fb' }}
+          NEXT_PUBLIC_ADMIN_UID: ${{ vars.NEXT_PUBLIC_ADMIN_UID || 'cyhaUkuDnMOe8wdhmhXF3dUsdzy1' }}
+          NEXT_PUBLIC_ADMIN_EMAIL: ${{ vars.NEXT_PUBLIC_ADMIN_EMAIL || 'rifat8851@gmail.com' }}
+          NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ vars.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_j38aw0r' }}
+          NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ vars.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_mlvl35i' }}
+          NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '9Om0NKQMWA5y34NgK' }}
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
